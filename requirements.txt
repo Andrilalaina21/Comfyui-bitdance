@@ -1,0 +1,10 @@
+torch
+einops
+safetensors
+transformers
+huggingface_hub
+accelerate
+tqdm
+
+# Optional acceleration backends
+# flash-attn
