@@ -32,6 +32,11 @@ Place your converted files in standard ComfyUI folders:
 
 Tokenizer files are bundled with this node package, so a separate tokenizer folder in `models/` is not required for local mode.
 
+## Resources
+
+- Hugging Face model files (ComfyUI 3-file package): [comfyuiblog/BitDance-14B-64x-fp8-comfyui](https://huggingface.co/comfyuiblog/BitDance-14B-64x-fp8-comfyui/tree/main)
+- Article + workflow guide: [How to fix the generic face bug in BitDance 14B and optimize speed](https://aistudynow.com/how-to-fix-the-generic-face-bug-in-bitdance-14b-optimize-speed/)
+
 ## Workflow (Current)
 
 1. Add `BitDance Loader`
