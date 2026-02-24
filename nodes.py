@@ -2108,38 +2108,42 @@ class BitDanceSampler:
             pos_embed_1d = _build_pos_embed_1d(hidden_size, vae_patch_size, device)
             pos_embed_for_diff = _get_2d_embed(pos_embed_1d, hidden_size, h, w, ps).unsqueeze(0)
 
-            vision_seq_len = img_start_emb.shape[0]
-
             input_embeds_cond = torch.cat([cond_emb, img_start_emb], dim=0).unsqueeze(0).repeat(num_images, 1, 1).to(dtype=autocast_dtype)
-            outputs_c = base_llm(inputs_embeds=input_embeds_cond[:, :-vision_seq_len, :], use_cache=True)
+            outputs_c = base_llm(inputs_embeds=input_embeds_cond[:, :-step_width, :], use_cache=True)
             pkv_c = outputs_c.past_key_values
 
             pkv_len = _cache_seq_len(pkv_c)
             bi_attn_mask = torch.ones(
-                (num_images, 1, vision_seq_len, vision_seq_len + pkv_len),
+                (num_images, 1, step_width, step_width + pkv_len),
                 dtype=torch.bool,
                 device=device,
             )
             outputs_c = base_llm(
-                inputs_embeds=input_embeds_cond[:, -vision_seq_len:, :],
+                inputs_embeds=input_embeds_cond[:, -step_width:, :],
                 past_key_values=pkv_c,
                 use_cache=True,
                 attention_mask=bi_attn_mask,
             )
             pkv_c = outputs_c.past_key_values
-            
-            # The generated hidden states must match the block size strictly, regardless of how many tokens conditioned it
             hidden_c = outputs_c.last_hidden_state[:, -step_width:]
 
             if guidance_scale > 1.0:
                 input_embeds_uncond = torch.cat([uncond_emb, img_start_emb], dim=0).unsqueeze(0).repeat(num_images, 1, 1).to(dtype=autocast_dtype)
-                outputs_u = base_llm(inputs_embeds=input_embeds_uncond[:, :-vision_seq_len, :], use_cache=True)
+                outputs_u = base_llm(inputs_embeds=input_embeds_uncond[:, :-step_width, :], use_cache=True)
                 pkv_u = outputs_u.past_key_values
+                
+                pkv_len_u = _cache_seq_len(pkv_u)
+                bi_attn_mask_u = torch.ones(
+                    (num_images, 1, step_width, step_width + pkv_len_u),
+                    dtype=torch.bool,
+                    device=device,
+                )
+                
                 outputs_u = base_llm(
-                    inputs_embeds=input_embeds_uncond[:, -vision_seq_len:, :],
+                    inputs_embeds=input_embeds_uncond[:, -step_width:, :],
                     past_key_values=pkv_u,
                     use_cache=True,
-                    attention_mask=bi_attn_mask,
+                    attention_mask=bi_attn_mask_u,
                 )
                 pkv_u = outputs_u.past_key_values
                 hidden_u = outputs_u.last_hidden_state[:, -step_width:]
@@ -2319,11 +2323,7 @@ class BitDanceDecode:
                 return (output / counts.clamp(min=1.0)).to(dtype=autocast_dtype)
 
             try:
-                if image_latents.shape[-1] * image_latents.shape[-2] >= 2000:
-                    LOGGER.info("BitDanceDecode: High resolution detected, falling back to tiled decoding to avoid VRAM overdraw.")
-                    decoded = decode_tiled(image_latents, tile_size=128, overlap=32)
-                else:
-                    decoded = vae.vae.decode(image_latents)
+                decoded = vae.vae.decode(image_latents)
             except torch.cuda.OutOfMemoryError as e:
                 LOGGER.warning("BitDanceDecode: OOM on standard decode, attempting tiled decode...")
                 comfy.model_management.soft_empty_cache()
