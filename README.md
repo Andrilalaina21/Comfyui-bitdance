@@ -58,3 +58,6 @@ Starter workflow JSON:
 - BitDance is autoregressive and is not a standard UNet denoiser. Use `BitDance Sampler` for generation.
 - The loader supports single-file converted checkpoints and bundle-style BitDance layouts.
 - FP8 + scale loading is supported for converted files (mixed-precision runtime behavior depends on selected loader mode).
+
+### Changelog / Updates
+- **Feb 2026**: Fixed severe OOM crash on 16GB-24GB cards at high resolutions (1024px+). The VRAM manager now forcibly unloads and explicitly restores `comfy.model_management.unload_all_models()` between the LLM text encoding, Vision sampling, and VAE decoding, allowing high-resolution inference!
