@@ -1,5 +1,8 @@
 # ComfyUI BitDance Nodes
 
+- Fixed `BitDanceSampler` crash with `guidance_scale > 1.0` when positive/negative prompts have different token lengths (separate attention masks are now built for cond/uncond cache lengths).
+
+
 Make sure: BitDance Loader -> quantization = fp8_e4m3fn_scaled
 
 ### Changelog / Updates
