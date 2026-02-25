@@ -1,5 +1,7 @@
 # ComfyUI BitDance Nodes
 
+Make sure: BitDance Loader -> quantization = fp8_e4m3fn_scaled
+
 ### Changelog / Updates
 - **Feb 2026**: Fixed severe OOM crash on 16GB-24GB cards at high resolutions (1024px+). The VRAM manager now forcibly unloads and explicitly restores `comfy.model_management.unload_all_models()` between the LLM text encoding, Vision sampling, and VAE decoding, allowing high-resolution inference!
 
